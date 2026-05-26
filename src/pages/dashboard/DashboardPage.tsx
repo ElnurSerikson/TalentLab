@@ -1,24 +1,11 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowRight, LogOut, Play, Sparkles } from 'lucide-react';
+import { ArrowRight, LogOut, Sparkles } from 'lucide-react';
 import { PageWrapper } from '@/components/layout/PageWrapper';
-import { Avatar, Button, Card, Icon, ProgressBar } from '@/components/ui';
+import { Avatar, Button, Card, Icon } from '@/components/ui';
 import { useUserStore } from '@/store/userStore';
 import { useReportStore } from '@/store/reportStore';
-import { useTestStore } from '@/store/testStore';
-
-const STEP_LABEL: Record<string, string> = {
-  screening: 'Скрининг',
-  freeform: 'Рассказ о себе',
-  scoring: 'Основной блок',
-  completed: 'Завершён',
-};
-
-const STEP_PATH: Record<string, string> = {
-  screening: '/test/screening',
-  freeform: '/test/scoring/freeform',
-  scoring: '/test/scoring/questions',
-  completed: '/report',
-};
+import { useBaseStore } from '@/store/baseStore';
+import { resetSession } from '@/lib/session';
 
 const EXPECTATION_LABELS: Record<string, string> = {
   understand_strengths: 'Понять сильные стороны',
@@ -31,16 +18,10 @@ const EXPECTATION_LABELS: Record<string, string> = {
 export function DashboardPage() {
   const navigate = useNavigate();
   const user = useUserStore((s) => s.user);
-  const logout = useUserStore((s) => s.logout);
   const report = useReportStore((s) => s.report);
-  const { screeningAnswers, scoringAnswers, currentStep } = useTestStore();
+  const character = useBaseStore((s) => s.character);
 
   if (!user) return null;
-
-  const answered = screeningAnswers.length + scoringAnswers.length;
-  const totalQ = 35 + 50;
-  const testProgress = Math.round((answered / totalQ) * 100);
-  const testStarted = answered > 0 && !report;
 
   return (
     <PageWrapper width="wide">
@@ -55,52 +36,39 @@ export function DashboardPage() {
       </div>
 
       <div className="grid gap-5 lg:grid-cols-3">
-        {/* Report card */}
+        {/* Character card */}
         <Card className="lg:col-span-2">
-          <h2 className="mb-4 text-lg font-bold text-talent-slate-900">Твой отчёт</h2>
-          {report ? (
+          <h2 className="mb-4 text-lg font-bold text-talent-slate-900">Твой характер</h2>
+          {character ? (
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-center gap-4">
                 <span
                   className="grid h-16 w-16 shrink-0 place-items-center rounded-2xl text-white"
-                  style={{ background: report.archetype.color }}
+                  style={{ background: character.archetype.color }}
                 >
-                  <Icon name={report.archetype.icon} className="h-8 w-8" />
+                  <Icon name={character.archetype.icon} className="h-8 w-8" />
                 </span>
                 <div>
                   <div className="text-xl font-extrabold text-talent-slate-900">
-                    {report.archetype.name}
+                    {character.archetype.name}
                   </div>
                   <div className="text-sm text-talent-slate-500">
-                    {report.archetype.tagline}
+                    {character.archetype.tagline}
                   </div>
                 </div>
               </div>
-              <Link to="/report">
+              <Link to="/onboarding/character">
                 <Button rightIcon={<ArrowRight className="h-4 w-4" />}>Посмотреть</Button>
               </Link>
             </div>
-          ) : testStarted ? (
-            <div>
-              <p className="mb-3 text-talent-slate-500">
-                Ты на этапе «{STEP_LABEL[currentStep]}». Продолжи, чтобы получить отчёт.
-              </p>
-              <ProgressBar value={testProgress} className="mb-4" showLabel />
-              <Button
-                onClick={() => navigate(STEP_PATH[currentStep])}
-                leftIcon={<Play className="h-4 w-4" />}
-              >
-                Продолжить тест
-              </Button>
-            </div>
           ) : (
             <div className="text-center">
-              <div className="mb-3 text-4xl">🚀</div>
+              <div className="mb-3 text-4xl">🧭</div>
               <p className="mb-4 text-talent-slate-500">
-                Ты ещё не проходил тест. Это займёт около 40 минут.
+                Пройди короткий базовый тест — узнаешь свой характер за пару минут.
               </p>
-              <Link to="/test/screening">
-                <Button leftIcon={<Sparkles className="h-4 w-4" />}>Пройти тест</Button>
+              <Link to="/onboarding/base">
+                <Button leftIcon={<Sparkles className="h-4 w-4" />}>Пройти базовый тест</Button>
               </Link>
             </div>
           )}
@@ -112,16 +80,6 @@ export function DashboardPage() {
           <dl className="space-y-2 text-sm">
             <Row label="Имя" value={user.name || '—'} />
             <Row label="Возраст" value={user.age ? String(user.age) : '—'} />
-            <Row
-              label="Статус"
-              value={
-                user.socialStatus === 'school'
-                  ? 'Школьник'
-                  : user.socialStatus === 'student'
-                    ? 'Студент'
-                    : 'Другое'
-              }
-            />
             <Row label="Email" value={user.email} />
           </dl>
           {user.expectations.length > 0 && (
@@ -176,7 +134,7 @@ export function DashboardPage() {
             <Button
               variant="ghost"
               onClick={() => {
-                logout();
+                resetSession();
                 navigate('/');
               }}
               leftIcon={<LogOut className="h-4 w-4" />}

@@ -9,6 +9,8 @@ const LandingPage = lazy(() => import('@/pages/landing/LandingPage').then((m) =>
 const AboutPage = lazy(() => import('@/pages/landing/AboutPage').then((m) => ({ default: m.AboutPage })));
 const AuthPage = lazy(() => import('@/pages/auth/AuthPage').then((m) => ({ default: m.AuthPage })));
 const OnboardingPage = lazy(() => import('@/pages/onboarding/OnboardingPage').then((m) => ({ default: m.OnboardingPage })));
+const BaseTestPage = lazy(() => import('@/pages/onboarding/BaseTestPage').then((m) => ({ default: m.BaseTestPage })));
+const CharacterPage = lazy(() => import('@/pages/onboarding/CharacterPage').then((m) => ({ default: m.CharacterPage })));
 const ScreeningPage = lazy(() => import('@/pages/screening/ScreeningPage').then((m) => ({ default: m.ScreeningPage })));
 const FreeformPage = lazy(() => import('@/pages/scoring/FreeformPage').then((m) => ({ default: m.FreeformPage })));
 const ScoringPage = lazy(() => import('@/pages/scoring/ScoringPage').then((m) => ({ default: m.ScoringPage })));
@@ -40,6 +42,7 @@ export const router = createBrowserRouter([
       { path: '/auth/register', element: <RedirectIfAuth><AuthPage mode="register" /></RedirectIfAuth> },
 
       { path: '/onboarding', element: <RequireAuth><OnboardingPage /></RequireAuth> },
+      { path: '/onboarding/character', element: <RequireAuth><CharacterPage /></RequireAuth> },
 
       { path: '/report', element: reportGuard(<ReportPage />) },
       { path: '/report/talents', element: reportGuard(<TalentsPage />) },
@@ -57,6 +60,7 @@ export const router = createBrowserRouter([
   {
     element: <BareLayout />,
     children: [
+      { path: '/onboarding/base', element: <RequireAuth><BaseTestPage /></RequireAuth> },
       { path: '/test/screening', element: <RequireOnboarding><ScreeningPage /></RequireOnboarding> },
       { path: '/test/scoring/freeform', element: <RequireOnboarding><FreeformPage /></RequireOnboarding> },
       { path: '/test/scoring/questions', element: <RequireOnboarding><ScoringPage /></RequireOnboarding> },

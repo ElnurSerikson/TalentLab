@@ -27,24 +27,10 @@ interface ProfileInput {
 interface UserState {
   user: User | null;
   login: (email: string) => void;
-  loginDemo: () => void;
   logout: () => void;
   setProfile: (data: ProfileInput) => void;
   completeOnboarding: () => void;
 }
-
-const DEMO_USER: User = {
-  id: 'demo-aigerim',
-  email: 'aigerim@demo.talentlab.app',
-  name: 'Айгерим',
-  age: 16,
-  gender: 'female',
-  socialStatus: 'school',
-  userVersion: 'school',
-  expectations: ['understand_strengths', 'preparing_admission'],
-  onboardingComplete: true,
-  createdAt: new Date().toISOString(),
-};
 
 export const useUserStore = create<UserState>()(
   persist(
@@ -66,8 +52,6 @@ export const useUserStore = create<UserState>()(
             createdAt: new Date().toISOString(),
           },
         }),
-
-      loginDemo: () => set({ user: { ...DEMO_USER, createdAt: new Date().toISOString() } }),
 
       logout: () => set({ user: null }),
 

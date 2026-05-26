@@ -234,6 +234,23 @@ export interface Report {
   freeform: FreeformAnswer;
 }
 
+// --- Base personality ("Твой характер") -------------------------------------
+
+export interface DomainScore {
+  domain: TalentDomain;
+  percent: number; // 0..100
+}
+
+export interface CharacterResult {
+  id: string;
+  generatedAt: string;
+  archetype: Archetype;
+  summary: string;
+  domains: DomainScore[]; // all 5, sorted desc
+  topTraits: TalentResult[]; // top 3 talents from the base
+  aiReadiness: number; // digital domain percent, surfaced as its own metric
+}
+
 // --- User -------------------------------------------------------------------
 
 export type Gender = 'male' | 'female' | 'prefer_not_to_say';

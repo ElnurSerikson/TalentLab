@@ -4,6 +4,7 @@ import { Star } from 'lucide-react';
 import { PageWrapper } from '@/components/layout/PageWrapper';
 import { Button, Card, Textarea, toast } from '@/components/ui';
 import { useFeedbackStore } from '@/store/feedbackStore';
+import { recordFeedback } from '@/lib/convexClient';
 import { track } from '@/lib/analytics';
 import { cn } from '@/lib/cn';
 
@@ -34,6 +35,7 @@ export function FeedbackPage() {
       return;
     }
     addFeedback({ rating, liked, missing, comment: comment.trim() });
+    void recordFeedback({ rating, liked, missing, comment: comment.trim() });
     track('feedback_submit', { rating });
     toast.success('Спасибо! Твой отзыв учтён 💜');
     navigate('/dashboard');

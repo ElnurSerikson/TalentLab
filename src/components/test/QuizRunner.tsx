@@ -103,14 +103,17 @@ export function QuizRunner({
         </AnimatePresence>
 
         <div className="mt-6 flex items-center justify-between">
-          <Button
-            variant="ghost"
-            onClick={goBack}
-            disabled={safeIndex === 0}
-            leftIcon={<ArrowLeft className="h-4 w-4" />}
-          >
-            Назад
-          </Button>
+          {safeIndex > 0 ? (
+            <Button
+              variant="ghost"
+              onClick={goBack}
+              leftIcon={<ArrowLeft className="h-4 w-4" />}
+            >
+              Назад
+            </Button>
+          ) : (
+            <span />
+          )}
           <Button
             onClick={goNext}
             disabled={value == null}

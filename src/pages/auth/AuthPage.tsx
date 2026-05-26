@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { z } from 'zod';
-import { Mail, Lock, Sparkles } from 'lucide-react';
+import { Mail, Lock } from 'lucide-react';
 import { PageWrapper } from '@/components/layout/PageWrapper';
-import { Button, Card, Input, Modal, Tabs, toast } from '@/components/ui';
+import { Button, Card, Input, Tabs } from '@/components/ui';
 import { Logo } from '@/components/layout/Logo';
 import { useUserStore } from '@/store/userStore';
 import { track } from '@/lib/analytics';
@@ -20,10 +20,8 @@ interface FormValues {
 
 export function AuthPage({ mode: initialMode }: { mode: 'login' | 'register' }) {
   const [mode, setMode] = useState<'login' | 'register'>(initialMode);
-  const [googleOpen, setGoogleOpen] = useState(false);
   const navigate = useNavigate();
   const login = useUserStore((s) => s.login);
-  const loginDemo = useUserStore((s) => s.loginDemo);
 
   const {
     register,
@@ -38,12 +36,6 @@ export function AuthPage({ mode: initialMode }: { mode: 'login' | 'register' }) 
     login(data.email);
     track(mode === 'register' ? 'auth_register' : 'auth_login', { email: data.email });
     navigate('/onboarding');
-  };
-
-  const handleDemo = () => {
-    loginDemo();
-    toast.success('Добро пожаловать, Айгерим! 💜');
-    navigate('/dashboard');
   };
 
   const password = watch('password');
@@ -117,26 +109,6 @@ export function AuthPage({ mode: initialMode }: { mode: 'login' | 'register' }) 
             {mode === 'register' ? 'Создать аккаунт' : 'Войти'}
           </Button>
         </form>
-
-        <div className="my-5 flex items-center gap-3 text-xs text-talent-slate-500">
-          <span className="h-px flex-1 bg-talent-slate-200" />
-          или
-          <span className="h-px flex-1 bg-talent-slate-200" />
-        </div>
-
-        <div className="space-y-3">
-          <Button variant="outline" fullWidth onClick={() => setGoogleOpen(true)}>
-            Войти через Google
-          </Button>
-          <Button
-            variant="ghost"
-            fullWidth
-            onClick={handleDemo}
-            leftIcon={<Sparkles className="h-4 w-4 text-talent-amber-400" />}
-          >
-            Войти как демо-пользователь Айгерим
-          </Button>
-        </div>
       </Card>
 
       <p className="mt-5 text-center text-sm text-talent-slate-500">
@@ -157,24 +129,6 @@ export function AuthPage({ mode: initialMode }: { mode: 'login' | 'register' }) 
       <p className="mt-2 text-center text-xs text-talent-slate-500">
         <Link to="/" className="hover:text-talent-violet-600">← На главную</Link>
       </p>
-
-      <Modal open={googleOpen} onClose={() => setGoogleOpen(false)} title="Демо-режим">
-        <p className="text-talent-slate-500">
-          Это демо-версия — вход через Google здесь как заглушка. Мы просто пропустим этот
-          шаг и создадим демо-аккаунт.
-        </p>
-        <Button
-          fullWidth
-          size="lg"
-          className="mt-5"
-          onClick={() => {
-            setGoogleOpen(false);
-            handleDemo();
-          }}
-        >
-          Продолжить в демо-режиме
-        </Button>
-      </Modal>
     </PageWrapper>
   );
 }

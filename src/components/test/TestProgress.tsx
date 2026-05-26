@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom';
 import { Save } from 'lucide-react';
 import { Logo } from '@/components/layout/Logo';
 import { ProgressBar } from '@/components/ui';
@@ -16,9 +15,7 @@ export function TestProgress({ current, total, label, onSave }: TestProgressProp
     <div className="sticky top-0 z-30 border-b border-talent-slate-200/70 bg-talent-cream-50/90 backdrop-blur-md">
       <div className="mx-auto max-w-2xl px-4 py-3 sm:px-6">
         <div className="mb-2 flex items-center justify-between gap-4">
-          <Link to="/dashboard" className="shrink-0">
-            <Logo className="scale-90 origin-left" />
-          </Link>
+          <Logo className="shrink-0 scale-90 origin-left" />
           <span className="text-sm font-semibold tabular text-talent-slate-500">
             {label} {current} из {total}
           </span>

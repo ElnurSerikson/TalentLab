@@ -4,16 +4,16 @@ import { LogOut, Menu, X } from 'lucide-react';
 import { Logo } from './Logo';
 import { Button, Avatar } from '@/components/ui';
 import { useUserStore } from '@/store/userStore';
+import { resetSession } from '@/lib/session';
 import { cn } from '@/lib/cn';
 
 export function Header() {
   const user = useUserStore((s) => s.user);
-  const logout = useUserStore((s) => s.logout);
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
 
   const handleLogout = () => {
-    logout();
+    resetSession();
     setOpen(false);
     navigate('/');
   };
