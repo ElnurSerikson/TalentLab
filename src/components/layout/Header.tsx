@@ -2,10 +2,11 @@ import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { LogOut, Menu, X } from 'lucide-react';
 import { Logo } from './Logo';
-import { Button, Avatar } from '@/components/ui';
+import { Button } from '@/components/ui';
 import { useUserStore } from '@/store/userStore';
 import { useAuthActionsSafe } from '@/lib/authActions';
 import { resetSession } from '@/lib/session';
+import { isCabinetPath } from '@/app/navConfig';
 import { cn } from '@/lib/cn';
 
 export function Header() {
@@ -15,9 +16,9 @@ export function Header() {
   const { signOut } = useAuthActionsSafe();
   const [open, setOpen] = useState(false);
 
-  // На лендинге всегда показываем маркетинговое меню, даже залогиненным:
-  // меняется только кнопка справа («Войти» → «Кабинет»).
-  const isLanding = location.pathname === '/';
+  // В кабинете — минимальный хедер (только «Выйти»). На витрине (включая лендинг
+  // даже залогиненным) — полное меню; кнопка справа «Войти» → «Кабинет».
+  const isCabinet = isCabinetPath(location.pathname);
 
   const handleLogout = async () => {
     try {
@@ -36,7 +37,11 @@ export function Header() {
         <Logo />
 
         <nav className="hidden items-center gap-1 md:flex">
-          {!user || isLanding ? (
+          {isCabinet ? (
+            <Button variant="ghost" size="sm" onClick={handleLogout} leftIcon={<LogOut className="h-4 w-4" />}>
+              Выйти
+            </Button>
+          ) : (
             <>
               <NavLink to="/about">О проекте</NavLink>
               <NavLink to="/pricing">Прайс</NavLink>
@@ -44,17 +49,6 @@ export function Header() {
               <Link to={user ? '/dashboard' : '/auth/login'} className="ml-2">
                 <Button variant="secondary" size="sm">{user ? 'Кабинет' : 'Войти'}</Button>
               </Link>
-            </>
-          ) : (
-            <>
-              <NavLink to="/dashboard">Кабинет</NavLink>
-              <NavLink to="/report">Мой отчёт</NavLink>
-              <div className="mx-2 flex items-center gap-2">
-                <Avatar name={user.name || user.email} size={36} />
-                <Button variant="ghost" size="sm" onClick={handleLogout} leftIcon={<LogOut className="h-4 w-4" />}>
-                  Выйти
-                </Button>
-              </div>
             </>
           )}
         </nav>
@@ -72,7 +66,11 @@ export function Header() {
       {open && (
         <div className="border-t border-talent-slate-200 bg-white px-4 py-4 md:hidden">
           <div className="flex flex-col gap-2">
-            {!user || isLanding ? (
+            {isCabinet ? (
+              <Button variant="ghost" fullWidth onClick={handleLogout} leftIcon={<LogOut className="h-4 w-4" />}>
+                Выйти
+              </Button>
+            ) : (
               <>
                 <MobileLink to="/about" onClick={() => setOpen(false)}>О проекте</MobileLink>
                 <MobileLink to="/pricing" onClick={() => setOpen(false)}>Прайс</MobileLink>
@@ -80,14 +78,6 @@ export function Header() {
                 <Link to={user ? '/dashboard' : '/auth/login'} onClick={() => setOpen(false)}>
                   <Button variant="secondary" fullWidth>{user ? 'Кабинет' : 'Войти'}</Button>
                 </Link>
-              </>
-            ) : (
-              <>
-                <MobileLink to="/dashboard" onClick={() => setOpen(false)}>Кабинет</MobileLink>
-                <MobileLink to="/report" onClick={() => setOpen(false)}>Мой отчёт</MobileLink>
-                <Button variant="ghost" fullWidth onClick={handleLogout} leftIcon={<LogOut className="h-4 w-4" />}>
-                  Выйти
-                </Button>
               </>
             )}
           </div>

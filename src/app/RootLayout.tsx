@@ -1,10 +1,11 @@
 import { Suspense } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { Toaster } from '@/components/ui';
 import { useScrollTop } from '@/hooks/useScrollTop';
+import { isCabinetPath } from './navConfig';
 
 function PageFallback() {
   return (
@@ -16,6 +17,8 @@ function PageFallback() {
 
 export function RootLayout() {
   useScrollTop();
+  const { pathname } = useLocation();
+  const hideFooter = isCabinetPath(pathname);
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
@@ -24,7 +27,7 @@ export function RootLayout() {
           <Outlet />
         </Suspense>
       </main>
-      <Footer />
+      {!hideFooter && <Footer />}
       <Toaster />
     </div>
   );

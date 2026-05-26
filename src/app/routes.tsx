@@ -49,7 +49,13 @@ export const router = createBrowserRouter([
       { path: '/auth/register', element: <RedirectIfAuth><AuthPage mode="register" /></RedirectIfAuth> },
 
       { path: '/onboarding', element: <RequireAuth><OnboardingPage /></RequireAuth> },
+      { path: '/onboarding/base', element: <RequireAuth><BaseTestPage /></RequireAuth> },
       { path: '/onboarding/character', element: <RequireAuth><CharacterPage /></RequireAuth> },
+
+      { path: '/test/startup', element: <RequireOnboarding><StartupTestPage /></RequireOnboarding> },
+      { path: '/test/screening', element: <RequireOnboarding><ScreeningPage /></RequireOnboarding> },
+      { path: '/test/scoring/freeform', element: <RequireOnboarding><FreeformPage /></RequireOnboarding> },
+      { path: '/test/scoring/questions', element: <RequireOnboarding><ScoringPage /></RequireOnboarding> },
 
       { path: '/report', element: reportGuard(<ReportPage />) },
       { path: '/report/talents', element: reportGuard(<TalentsPage />) },
@@ -70,11 +76,6 @@ export const router = createBrowserRouter([
   {
     element: <BareLayout />,
     children: [
-      { path: '/onboarding/base', element: <RequireAuth><BaseTestPage /></RequireAuth> },
-      { path: '/test/startup', element: <RequireOnboarding><StartupTestPage /></RequireOnboarding> },
-      { path: '/test/screening', element: <RequireOnboarding><ScreeningPage /></RequireOnboarding> },
-      { path: '/test/scoring/freeform', element: <RequireOnboarding><FreeformPage /></RequireOnboarding> },
-      { path: '/test/scoring/questions', element: <RequireOnboarding><ScoringPage /></RequireOnboarding> },
       { path: '/test/processing', element: <RequireAuth><ProcessingPage /></RequireAuth> },
     ],
   },

@@ -3,6 +3,7 @@ import { AnimatePresence } from 'framer-motion';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import type { Question } from '@/domain/types';
 import { Button } from '@/components/ui';
+import { PageWrapper } from '@/components/layout/PageWrapper';
 import { TestProgress } from './TestProgress';
 import { QuestionCard } from './QuestionCard';
 import { EncouragementScreen } from './EncouragementScreen';
@@ -71,58 +72,54 @@ export function QuizRunner({
 
   if (milestone) {
     return (
-      <div>
+      <PageWrapper width="narrow">
         <TestProgress current={answeredCount} total={total} label={label} onSave={onSave} />
-        <div className="mx-auto max-w-2xl px-4 sm:px-6">
-          <EncouragementScreen
-            emoji={milestone.data.emoji}
-            title={milestone.data.title}
-            subtitle={milestone.data.subtitle}
-            onContinue={() => {
-              setIndex(milestone.next);
-              setMilestone(null);
-            }}
-          />
-        </div>
-      </div>
+        <EncouragementScreen
+          emoji={milestone.data.emoji}
+          title={milestone.data.title}
+          subtitle={milestone.data.subtitle}
+          onContinue={() => {
+            setIndex(milestone.next);
+            setMilestone(null);
+          }}
+        />
+      </PageWrapper>
     );
   }
 
   return (
-    <div>
+    <PageWrapper width="narrow">
       <TestProgress current={answeredCount} total={total} label={label} onSave={onSave} />
-      <div className="mx-auto max-w-2xl px-4 py-8 sm:px-6">
-        <AnimatePresence mode="wait">
-          <QuestionCard
-            key={question.id}
-            question={question}
-            tagKeys={tagKeys}
-            value={value}
-            onChange={handleAnswer}
-          />
-        </AnimatePresence>
+      <AnimatePresence mode="wait">
+        <QuestionCard
+          key={question.id}
+          question={question}
+          tagKeys={tagKeys}
+          value={value}
+          onChange={handleAnswer}
+        />
+      </AnimatePresence>
 
-        <div className="mt-6 flex items-center justify-between">
-          {safeIndex > 0 ? (
-            <Button
-              variant="ghost"
-              onClick={goBack}
-              leftIcon={<ArrowLeft className="h-4 w-4" />}
-            >
-              Назад
-            </Button>
-          ) : (
-            <span />
-          )}
+      <div className="mt-6 flex items-center justify-between">
+        {safeIndex > 0 ? (
           <Button
-            onClick={goNext}
-            disabled={value == null}
-            rightIcon={<ArrowRight className="h-4 w-4" />}
+            variant="ghost"
+            onClick={goBack}
+            leftIcon={<ArrowLeft className="h-4 w-4" />}
           >
-            {safeIndex === total - 1 ? 'Завершить' : 'Дальше'}
+            Назад
           </Button>
-        </div>
+        ) : (
+          <span />
+        )}
+        <Button
+          onClick={goNext}
+          disabled={value == null}
+          rightIcon={<ArrowRight className="h-4 w-4" />}
+        >
+          {safeIndex === total - 1 ? 'Завершить' : 'Дальше'}
+        </Button>
       </div>
-    </div>
+    </PageWrapper>
   );
 }

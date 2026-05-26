@@ -35,10 +35,9 @@ export function FreeformPage() {
   };
 
   return (
-    <div>
+    <PageWrapper width="narrow">
       <TestProgress current={1} total={2} label="Шаг" />
-      <PageWrapper width="narrow">
-        <h1 className="mb-2 text-2xl font-extrabold text-talent-slate-900 sm:text-3xl">
+      <h1 className="mb-2 text-2xl font-extrabold text-talent-slate-900 sm:text-3xl">
           Расскажи о себе своими словами
         </h1>
         <p className="mb-6 text-talent-slate-500">
@@ -100,7 +99,6 @@ export function FreeformPage() {
             Дальше
           </Button>
         </div>
-      </PageWrapper>
-    </div>
+    </PageWrapper>
   );
 }

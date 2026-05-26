@@ -1,5 +1,4 @@
 import { Save } from 'lucide-react';
-import { Logo } from '@/components/layout/Logo';
 import { ProgressBar } from '@/components/ui';
 
 export interface TestProgressProps {
@@ -9,30 +8,31 @@ export interface TestProgressProps {
   onSave?: () => void;
 }
 
+/**
+ * Внутри-контентный блок прогресса теста — золотой стандарт онбординга:
+ * подпись слева, счётчик «X / Y» справа, линия прогресса под ними.
+ * Сам хедер (лого + «Выйти») даёт RootLayout, как и на экранах онбординга.
+ */
 export function TestProgress({ current, total, label, onSave }: TestProgressProps) {
   const percent = (current / total) * 100;
   return (
-    <div className="sticky top-0 z-30 border-b border-talent-slate-200/70 bg-talent-cream-50/90 backdrop-blur-md">
-      <div className="mx-auto max-w-2xl px-4 py-3 sm:px-6">
-        <div className="mb-2 flex items-center justify-between gap-4">
-          <Logo className="shrink-0 scale-90 origin-left" />
-          <span className="text-sm font-semibold tabular text-talent-slate-500">
-            {label} {current} из {total}
-          </span>
-          {onSave ? (
+    <div className="mb-8">
+      <div className="mb-2 flex items-center justify-between gap-4 text-sm font-medium text-talent-slate-500">
+        <span>{label}</span>
+        <div className="flex items-center gap-3">
+          {onSave && (
             <button
               onClick={onSave}
-              className="hidden items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-sm font-medium text-talent-violet-600 hover:bg-talent-violet-50 sm:inline-flex"
+              className="inline-flex items-center gap-1.5 text-talent-violet-600 transition-colors hover:text-talent-violet-700"
             >
               <Save className="h-4 w-4" />
               Сохранить
             </button>
-          ) : (
-            <span className="hidden w-20 sm:block" />
           )}
+          <span className="tabular">{current} / {total}</span>
         </div>
-        <ProgressBar value={percent} ariaLabel={`${label} ${current} из ${total}`} />
       </div>
+      <ProgressBar value={percent} ariaLabel={`${label} ${current} из ${total}`} />
     </div>
   );
 }
