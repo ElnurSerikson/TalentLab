@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { Mail, Lock } from 'lucide-react';
 import { PageWrapper } from '@/components/layout/PageWrapper';
 import { Button, Card, Input, Tabs } from '@/components/ui';
+import { GridBackground } from '@/components/ui/GridBackground';
 import { Logo } from '@/components/layout/Logo';
 import { useUserStore } from '@/store/userStore';
 import { useAuthActionsSafe } from '@/lib/authActions';
@@ -67,19 +68,21 @@ export function AuthPage({ mode: initialMode }: { mode: 'login' | 'register' }) 
 
   return (
     <PageWrapper width="narrow" className="max-w-md">
+      <GridBackground className="pointer-events-none fixed inset-0 -z-10" />
       <div className="mb-6 flex justify-center">
         <Logo />
       </div>
       <Card className="p-6 sm:p-8">
-        <Tabs
-          className="mb-6 w-full"
-          value={mode}
-          onChange={(v) => setMode(v as 'login' | 'register')}
-          items={[
-            { value: 'login', label: 'Войти' },
-            { value: 'register', label: 'Регистрация' },
-          ]}
-        />
+        <div className="mb-6 flex justify-center">
+          <Tabs
+            value={mode}
+            onChange={(v) => setMode(v as 'login' | 'register')}
+            items={[
+              { value: 'login', label: 'Войти' },
+              { value: 'register', label: 'Регистрация' },
+            ]}
+          />
+        </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
           <Input

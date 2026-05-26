@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { LogOut, Menu, X } from 'lucide-react';
 import { Logo } from './Logo';
 import { Button, Avatar } from '@/components/ui';
@@ -11,8 +11,13 @@ import { cn } from '@/lib/cn';
 export function Header() {
   const user = useUserStore((s) => s.user);
   const navigate = useNavigate();
+  const location = useLocation();
   const { signOut } = useAuthActionsSafe();
   const [open, setOpen] = useState(false);
+
+  // На лендинге всегда показываем маркетинговое меню, даже залогиненным:
+  // меняется только кнопка справа («Войти» → «Кабинет»).
+  const isLanding = location.pathname === '/';
 
   const handleLogout = async () => {
     try {
@@ -31,7 +36,16 @@ export function Header() {
         <Logo />
 
         <nav className="hidden items-center gap-1 md:flex">
-          {user ? (
+          {!user || isLanding ? (
+            <>
+              <NavLink to="/about">О проекте</NavLink>
+              <NavLink to="/pricing">Прайс</NavLink>
+              <NavLink to="/contacts">Контакты</NavLink>
+              <Link to={user ? '/dashboard' : '/auth/login'} className="ml-2">
+                <Button variant="secondary" size="sm">{user ? 'Кабинет' : 'Войти'}</Button>
+              </Link>
+            </>
+          ) : (
             <>
               <NavLink to="/dashboard">Кабинет</NavLink>
               <NavLink to="/report">Мой отчёт</NavLink>
@@ -41,16 +55,6 @@ export function Header() {
                   Выйти
                 </Button>
               </div>
-            </>
-          ) : (
-            <>
-              <NavLink to="/about">О проекте</NavLink>
-              <Link to="/auth/login">
-                <Button variant="ghost" size="sm">Войти</Button>
-              </Link>
-              <Link to="/auth/register">
-                <Button variant="secondary" size="sm">Начать бесплатно</Button>
-              </Link>
             </>
           )}
         </nav>
@@ -68,23 +72,22 @@ export function Header() {
       {open && (
         <div className="border-t border-talent-slate-200 bg-white px-4 py-4 md:hidden">
           <div className="flex flex-col gap-2">
-            {user ? (
+            {!user || isLanding ? (
+              <>
+                <MobileLink to="/about" onClick={() => setOpen(false)}>О проекте</MobileLink>
+                <MobileLink to="/pricing" onClick={() => setOpen(false)}>Прайс</MobileLink>
+                <MobileLink to="/contacts" onClick={() => setOpen(false)}>Контакты</MobileLink>
+                <Link to={user ? '/dashboard' : '/auth/login'} onClick={() => setOpen(false)}>
+                  <Button variant="secondary" fullWidth>{user ? 'Кабинет' : 'Войти'}</Button>
+                </Link>
+              </>
+            ) : (
               <>
                 <MobileLink to="/dashboard" onClick={() => setOpen(false)}>Кабинет</MobileLink>
                 <MobileLink to="/report" onClick={() => setOpen(false)}>Мой отчёт</MobileLink>
                 <Button variant="ghost" fullWidth onClick={handleLogout} leftIcon={<LogOut className="h-4 w-4" />}>
                   Выйти
                 </Button>
-              </>
-            ) : (
-              <>
-                <MobileLink to="/about" onClick={() => setOpen(false)}>О проекте</MobileLink>
-                <Link to="/auth/login" onClick={() => setOpen(false)}>
-                  <Button variant="outline" fullWidth>Войти</Button>
-                </Link>
-                <Link to="/auth/register" onClick={() => setOpen(false)}>
-                  <Button variant="secondary" fullWidth>Начать бесплатно</Button>
-                </Link>
               </>
             )}
           </div>
@@ -98,7 +101,7 @@ function NavLink({ to, children }: { to: string; children: React.ReactNode }) {
   return (
     <Link
       to={to}
-      className="rounded-lg px-3 py-2 text-sm font-semibold text-talent-slate-500 transition-colors hover:bg-talent-violet-50 hover:text-talent-violet-700"
+      className="rounded-lg px-3 py-2 text-sm font-semibold text-talent-slate-500 transition-colors hover:text-talent-violet-600"
     >
       {children}
     </Link>

@@ -3,7 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { Star } from 'lucide-react';
 import { PageWrapper } from '@/components/layout/PageWrapper';
 import { Button, Card, Textarea, toast } from '@/components/ui';
+import { GridBackground } from '@/components/ui/GridBackground';
 import { useFeedbackStore } from '@/store/feedbackStore';
+import { useUserStore } from '@/store/userStore';
 import { recordFeedback } from '@/lib/convexClient';
 import { track } from '@/lib/analytics';
 import { cn } from '@/lib/cn';
@@ -14,6 +16,7 @@ const MISSING = ['Больше профессий', 'Глубже анализ',
 export function FeedbackPage() {
   const navigate = useNavigate();
   const addFeedback = useFeedbackStore((s) => s.addFeedback);
+  const user = useUserStore((s) => s.user);
 
   const [rating, setRating] = useState(0);
   const [hover, setHover] = useState(0);
@@ -38,11 +41,12 @@ export function FeedbackPage() {
     void recordFeedback({ rating, liked, missing, comment: comment.trim() });
     track('feedback_submit', { rating });
     toast.success('Спасибо! Твой отзыв учтён 💜');
-    navigate('/dashboard');
+    navigate(user ? '/dashboard' : '/');
   };
 
   return (
     <PageWrapper width="narrow">
+      <GridBackground className="pointer-events-none fixed inset-0 -z-10" />
       <h1 className="mb-2 text-3xl font-extrabold tracking-tight text-talent-slate-900">
         Понравился тест?
       </h1>

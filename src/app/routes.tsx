@@ -7,6 +7,8 @@ import { RequireAuth, RequireOnboarding, RequireReport, RedirectIfAuth } from '.
 // the initial bundle. Direct lazy() calls preserve each component's prop types.
 const LandingPage = lazy(() => import('@/pages/landing/LandingPage').then((m) => ({ default: m.LandingPage })));
 const AboutPage = lazy(() => import('@/pages/landing/AboutPage').then((m) => ({ default: m.AboutPage })));
+const PricingPage = lazy(() => import('@/pages/landing/PricingPage').then((m) => ({ default: m.PricingPage })));
+const ContactsPage = lazy(() => import('@/pages/landing/ContactsPage').then((m) => ({ default: m.ContactsPage })));
 const AuthPage = lazy(() => import('@/pages/auth/AuthPage').then((m) => ({ default: m.AuthPage })));
 const OnboardingPage = lazy(() => import('@/pages/onboarding/OnboardingPage').then((m) => ({ default: m.OnboardingPage })));
 const BaseTestPage = lazy(() => import('@/pages/onboarding/BaseTestPage').then((m) => ({ default: m.BaseTestPage })));
@@ -40,6 +42,8 @@ export const router = createBrowserRouter([
     children: [
       { path: '/', element: <LandingPage /> },
       { path: '/about', element: <AboutPage /> },
+      { path: '/pricing', element: <PricingPage /> },
+      { path: '/contacts', element: <ContactsPage /> },
 
       { path: '/auth/login', element: <RedirectIfAuth><AuthPage mode="login" /></RedirectIfAuth> },
       { path: '/auth/register', element: <RedirectIfAuth><AuthPage mode="register" /></RedirectIfAuth> },
@@ -58,7 +62,7 @@ export const router = createBrowserRouter([
       { path: '/test/startup/result', element: <RequireOnboarding><StartupResultPage /></RequireOnboarding> },
 
       { path: '/dashboard', element: <RequireOnboarding><DashboardPage /></RequireOnboarding> },
-      { path: '/feedback', element: <RequireAuth><FeedbackPage /></RequireAuth> },
+      { path: '/feedback', element: <FeedbackPage /> },
 
       { path: '*', element: <NotFoundPage /> },
     ],

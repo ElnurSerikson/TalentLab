@@ -14,9 +14,10 @@ import {
   Sparkles,
   Target,
 } from 'lucide-react';
-import { Button, Card, Badge, Reveal, Icon } from '@/components/ui';
+import { Button, Badge, Reveal, Icon } from '@/components/ui';
 import { PageBackground } from '@/components/ui/PageBackground';
 import { ParticlesBackground } from '@/components/ui/ParticlesBackground';
+import { SpotlightCard } from '@/components/ui/SpotlightCard';
 
 // Все контентные секции лендинга держим в одной ширине с хедером/футером (max-w-6xl).
 const SECTION = 'mx-auto max-w-6xl px-4 sm:px-6';
@@ -110,14 +111,14 @@ function HowItWorks() {
         <div className="grid gap-6 md:grid-cols-3">
           {STEPS.map((s, i) => (
             <Reveal key={s.title} delay={i * 0.1}>
-              <Card hoverable className="h-full">
+              <SpotlightCard>
                 <div className={`mb-4 ${ICON_BOX}`}>
                   <s.icon className="h-6 w-6" />
                 </div>
                 <div className="mb-1 text-sm font-bold text-talent-violet-600">Шаг {i + 1}</div>
                 <h3 className="mb-2 text-xl font-bold text-talent-slate-900">{s.title}</h3>
                 <p className="text-talent-slate-500">{s.text}</p>
-              </Card>
+              </SpotlightCard>
             </Reveal>
           ))}
         </div>
@@ -163,13 +164,13 @@ function ThreePaths() {
         <div className="grid gap-5 md:grid-cols-3">
           {PATHS.map((p, i) => (
             <Reveal key={p.title} delay={i * 0.1}>
-              <Card hoverable className="h-full">
+              <SpotlightCard>
                 <span className={`mb-4 ${ICON_BOX_VIOLET}`}>
                   <p.icon className="h-6 w-6" />
                 </span>
                 <h3 className="mb-2 text-xl font-bold text-talent-slate-900">{p.title}</h3>
                 <p className="text-talent-slate-500">{p.text}</p>
-              </Card>
+              </SpotlightCard>
             </Reveal>
           ))}
         </div>
@@ -196,15 +197,17 @@ function WhatYouGet() {
       <div className="grid gap-5 sm:grid-cols-2">
         {FEATURES.map((f, i) => (
           <Reveal key={f.title} delay={i * 0.08}>
-            <div className="flex gap-4 rounded-2xl bg-white p-5 shadow-soft">
-              <span className={`shrink-0 ${ICON_BOX}`}>
-                <f.icon className="h-6 w-6" />
-              </span>
-              <div>
-                <h3 className="mb-1 font-bold text-talent-slate-900">{f.title}</h3>
-                <p className="text-sm text-talent-slate-500">{f.text}</p>
+            <SpotlightCard>
+              <div className="flex gap-4">
+                <span className={`shrink-0 ${ICON_BOX}`}>
+                  <f.icon className="h-6 w-6" />
+                </span>
+                <div>
+                  <h3 className="mb-1 font-bold text-talent-slate-900">{f.title}</h3>
+                  <p className="text-sm text-talent-slate-500">{f.text}</p>
+                </div>
               </div>
-            </div>
+            </SpotlightCard>
           </Reveal>
         ))}
       </div>
@@ -243,7 +246,7 @@ function DevelopmentPlan() {
         <div className="grid gap-6 lg:grid-cols-2 lg:items-stretch">
           {/* Что в отчёте */}
           <Reveal>
-            <Card className="h-full">
+            <SpotlightCard>
               <h3 className="mb-4 text-lg font-bold text-talent-slate-900">Что внутри отчёта</h3>
               <ul className="space-y-4">
                 {REPORT_BLOCKS.map((b) => (
@@ -258,7 +261,7 @@ function DevelopmentPlan() {
                   </li>
                 ))}
               </ul>
-            </Card>
+            </SpotlightCard>
           </Reveal>
 
           {/* План развития — акцентная карточка */}
