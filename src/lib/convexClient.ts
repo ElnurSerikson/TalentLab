@@ -1,11 +1,9 @@
-import { ConvexReactClient } from 'convex/react';
 import { api } from '../../convex/_generated/api';
+import { convex as client } from './convex';
 import { getClientId } from './clientId';
 
 // Если VITE_CONVEX_URL не задан — клиент null, и все вызовы тихо ничего не делают
 // (приложение работает как раньше, без бэкенда).
-const url = import.meta.env.VITE_CONVEX_URL as string | undefined;
-const client = url ? new ConvexReactClient(url) : null;
 
 export function convexEnabled(): boolean {
   return client !== null;

@@ -1,4 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
+import { useAuthActions } from '@convex-dev/auth/react';
 import { ArrowRight, LogOut, Sparkles } from 'lucide-react';
 import { PageWrapper } from '@/components/layout/PageWrapper';
 import { Avatar, Button, Card, Icon } from '@/components/ui';
@@ -20,6 +21,17 @@ export function DashboardPage() {
   const user = useUserStore((s) => s.user);
   const report = useReportStore((s) => s.report);
   const character = useBaseStore((s) => s.character);
+  const { signOut } = useAuthActions();
+
+  const handleLogout = async () => {
+    try {
+      await signOut();
+    } catch {
+      /* ignore */
+    }
+    resetSession();
+    navigate('/');
+  };
 
   if (!user) return null;
 
@@ -133,10 +145,7 @@ export function DashboardPage() {
           <div className="pt-2">
             <Button
               variant="ghost"
-              onClick={() => {
-                resetSession();
-                navigate('/');
-              }}
+              onClick={handleLogout}
               leftIcon={<LogOut className="h-4 w-4" />}
             >
               Выйти из аккаунта

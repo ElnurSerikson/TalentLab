@@ -8,8 +8,10 @@
  * @module
  */
 
+import type * as auth from "../auth.js";
 import type * as baseRuns from "../baseRuns.js";
 import type * as feedback from "../feedback.js";
+import type * as http from "../http.js";
 
 import type {
   ApiFromModules,
@@ -18,8 +20,10 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  auth: typeof auth;
   baseRuns: typeof baseRuns;
   feedback: typeof feedback;
+  http: typeof http;
 }>;
 
 /**

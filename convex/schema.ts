@@ -1,10 +1,12 @@
 import { defineSchema, defineTable } from 'convex/server';
 import { v } from 'convex/values';
+import { authTables } from '@convex-dev/auth/server';
 
-// Анонимный сбор данных по индустрии: каждый завершённый базовый тест и каждый
-// фидбек пишутся сюда. Авторизация (Convex Auth) добавится следующим шагом —
-// тогда добавим поле userId и привяжем записи к аккаунту.
+// authTables — таблицы Convex Auth (users, authSessions, authAccounts и т.д.).
+// Ниже — наши прикладные таблицы для сбора данных по индустрии.
 export default defineSchema({
+  ...authTables,
+
   baseRuns: defineTable({
     clientId: v.string(), // анонимный id устройства (localStorage)
     name: v.optional(v.string()),

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAuthActions } from '@convex-dev/auth/react';
 import { z } from 'zod';
 import { Mail, Lock } from 'lucide-react';
 import { PageWrapper } from '@/components/layout/PageWrapper';
@@ -22,6 +23,9 @@ export function AuthPage({ mode: initialMode }: { mode: 'login' | 'register' }) 
   const [mode, setMode] = useState<'login' | 'register'>(initialMode);
   const navigate = useNavigate();
   const login = useUserStore((s) => s.login);
+  const { signIn } = useAuthActions();
+  const [authError, setAuthError] = useState('');
+  const [submitting, setSubmitting] = useState(false);
 
   const {
     register,
@@ -32,10 +36,27 @@ export function AuthPage({ mode: initialMode }: { mode: 'login' | 'register' }) 
     defaultValues: { email: '', password: '', confirm: '', consent: false },
   });
 
-  const onSubmit = (data: FormValues) => {
-    login(data.email);
-    track(mode === 'register' ? 'auth_register' : 'auth_login', { email: data.email });
-    navigate('/onboarding');
+  const onSubmit = async (data: FormValues) => {
+    setAuthError('');
+    setSubmitting(true);
+    try {
+      await signIn('password', {
+        email: data.email,
+        password: data.password,
+        flow: mode === 'register' ? 'signUp' : 'signIn',
+      });
+      login(data.email);
+      track(mode === 'register' ? 'auth_register' : 'auth_login', { email: data.email });
+      navigate('/onboarding');
+    } catch {
+      setAuthError(
+        mode === 'register'
+          ? 'Не удалось создать аккаунт. Возможно, этот email уже занят.'
+          : 'Неверный email или пароль.',
+      );
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const password = watch('password');
@@ -97,7 +118,7 @@ export function AuthPage({ mode: initialMode }: { mode: 'login' | 'register' }) 
                 {...register('consent', { required: 'Нужно согласие на обработку данных' })}
               />
               <span>
-                Я согласен с обработкой данных (демо: всё хранится локально)
+                Я согласен с обработкой моих данных
                 {errors.consent && (
                   <span className="block text-talent-rose-500">{errors.consent.message}</span>
                 )}
@@ -105,7 +126,13 @@ export function AuthPage({ mode: initialMode }: { mode: 'login' | 'register' }) 
             </label>
           )}
 
-          <Button type="submit" fullWidth size="lg">
+          {authError && (
+            <p className="rounded-xl bg-talent-rose-500/10 px-3.5 py-2.5 text-sm text-talent-rose-500">
+              {authError}
+            </p>
+          )}
+
+          <Button type="submit" fullWidth size="lg" loading={submitting}>
             {mode === 'register' ? 'Создать аккаунт' : 'Войти'}
           </Button>
         </form>

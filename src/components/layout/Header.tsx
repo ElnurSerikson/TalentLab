@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAuthActions } from '@convex-dev/auth/react';
 import { LogOut, Menu, X } from 'lucide-react';
 import { Logo } from './Logo';
 import { Button, Avatar } from '@/components/ui';
@@ -10,9 +11,15 @@ import { cn } from '@/lib/cn';
 export function Header() {
   const user = useUserStore((s) => s.user);
   const navigate = useNavigate();
+  const { signOut } = useAuthActions();
   const [open, setOpen] = useState(false);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    try {
+      await signOut();
+    } catch {
+      /* ignore */
+    }
     resetSession();
     setOpen(false);
     navigate('/');
