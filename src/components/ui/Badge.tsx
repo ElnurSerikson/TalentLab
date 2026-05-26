@@ -1,7 +1,7 @@
 import type { HTMLAttributes } from 'react';
 import { cn } from '@/lib/cn';
 
-type Tone = 'violet' | 'amber' | 'emerald' | 'rose' | 'slate';
+type Tone = 'violet' | 'orange' | 'emerald' | 'rose' | 'slate';
 
 export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
   tone?: Tone;
@@ -9,7 +9,7 @@ export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
 
 const toneClasses: Record<Tone, string> = {
   violet: 'bg-talent-violet-100 text-talent-violet-700',
-  amber: 'bg-talent-amber-400/20 text-talent-amber-500',
+  orange: 'bg-talent-orange-400/20 text-talent-orange-500',
   emerald: 'bg-talent-emerald-500/15 text-talent-emerald-500',
   rose: 'bg-talent-rose-500/15 text-talent-rose-500',
   slate: 'bg-talent-slate-200 text-talent-slate-500',

@@ -109,6 +109,19 @@ export function DashboardPage() {
         </Card>
       </div>
 
+      {/* Tests CTA */}
+      <Card className="mt-5 flex flex-col gap-3 bg-talent-violet-50/60 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h2 className="text-lg font-bold text-talent-slate-900">Профориентационные тесты</h2>
+          <p className="text-sm text-talent-slate-500">
+            Узнай, какой стартап тебе делать, на какой работе расцветёшь и куда пойти учиться.
+          </p>
+        </div>
+        <Link to="/tests" className="shrink-0">
+          <Button rightIcon={<ArrowRight className="h-4 w-4" />}>Выбрать тест</Button>
+        </Link>
+      </Card>
+
       {report && report.professions.length > 0 && (
         <Card className="mt-5">
           <h2 className="mb-4 text-lg font-bold text-talent-slate-900">Топ профессия для тебя</h2>

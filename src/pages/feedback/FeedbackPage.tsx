@@ -62,7 +62,7 @@ export function FeedbackPage() {
                 className={cn(
                   'h-10 w-10 transition-colors',
                   (hover || rating) >= n
-                    ? 'fill-talent-amber-400 text-talent-amber-400'
+                    ? 'fill-talent-orange-400 text-talent-orange-400'
                     : 'text-talent-slate-200',
                 )}
               />

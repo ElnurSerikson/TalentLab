@@ -11,6 +11,7 @@
 import type * as auth from "../auth.js";
 import type * as baseRuns from "../baseRuns.js";
 import type * as feedback from "../feedback.js";
+import type * as founderRuns from "../founderRuns.js";
 import type * as http from "../http.js";
 
 import type {
@@ -23,6 +24,7 @@ declare const fullApi: ApiFromModules<{
   auth: typeof auth;
   baseRuns: typeof baseRuns;
   feedback: typeof feedback;
+  founderRuns: typeof founderRuns;
   http: typeof http;
 }>;
 

@@ -21,6 +21,9 @@ const ProfessionsPage = lazy(() => import('@/pages/report/ProfessionsPage').then
 const RecommendationsPage = lazy(() => import('@/pages/report/RecommendationsPage').then((m) => ({ default: m.RecommendationsPage })));
 const SpheresPage = lazy(() => import('@/pages/report/SpheresPage').then((m) => ({ default: m.SpheresPage })));
 const SharePage = lazy(() => import('@/pages/report/SharePage').then((m) => ({ default: m.SharePage })));
+const TestsHubPage = lazy(() => import('@/pages/tests/TestsHubPage').then((m) => ({ default: m.TestsHubPage })));
+const StartupTestPage = lazy(() => import('@/pages/tests/StartupTestPage').then((m) => ({ default: m.StartupTestPage })));
+const StartupResultPage = lazy(() => import('@/pages/tests/StartupResultPage').then((m) => ({ default: m.StartupResultPage })));
 const DashboardPage = lazy(() => import('@/pages/dashboard/DashboardPage').then((m) => ({ default: m.DashboardPage })));
 const FeedbackPage = lazy(() => import('@/pages/feedback/FeedbackPage').then((m) => ({ default: m.FeedbackPage })));
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage').then((m) => ({ default: m.NotFoundPage })));
@@ -51,6 +54,9 @@ export const router = createBrowserRouter([
       { path: '/report/spheres', element: reportGuard(<SpheresPage />) },
       { path: '/report/share/:id', element: <SharePage /> },
 
+      { path: '/tests', element: <RequireOnboarding><TestsHubPage /></RequireOnboarding> },
+      { path: '/test/startup/result', element: <RequireOnboarding><StartupResultPage /></RequireOnboarding> },
+
       { path: '/dashboard', element: <RequireOnboarding><DashboardPage /></RequireOnboarding> },
       { path: '/feedback', element: <RequireAuth><FeedbackPage /></RequireAuth> },
 
@@ -61,6 +67,7 @@ export const router = createBrowserRouter([
     element: <BareLayout />,
     children: [
       { path: '/onboarding/base', element: <RequireAuth><BaseTestPage /></RequireAuth> },
+      { path: '/test/startup', element: <RequireOnboarding><StartupTestPage /></RequireOnboarding> },
       { path: '/test/screening', element: <RequireOnboarding><ScreeningPage /></RequireOnboarding> },
       { path: '/test/scoring/freeform', element: <RequireOnboarding><FreeformPage /></RequireOnboarding> },
       { path: '/test/scoring/questions', element: <RequireOnboarding><ScoringPage /></RequireOnboarding> },

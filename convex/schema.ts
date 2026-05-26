@@ -41,4 +41,21 @@ export default defineSchema({
     comment: v.string(),
     createdAt: v.number(),
   }),
+
+  founderRuns: defineTable({
+    clientId: v.string(),
+    answers: v.array(
+      v.object({
+        questionId: v.string(),
+        value: v.union(v.number(), v.string()),
+      }),
+    ),
+    primary: v.string(),
+    secondary: v.string(),
+    readiness: v.number(),
+    verdictTier: v.string(),
+    roles: v.array(v.object({ role: v.string(), percent: v.number() })),
+    startupTypes: v.array(v.string()),
+    createdAt: v.number(),
+  }).index('by_client', ['clientId']),
 });

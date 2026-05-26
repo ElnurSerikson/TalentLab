@@ -5,7 +5,7 @@ import { Card, Icon } from '@/components/ui';
 export function RecommendationCard({ rec }: { rec: Recommendation }) {
   return (
     <Card className="h-full">
-      <div className="mb-3 inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-talent-amber-400/20 text-talent-amber-500">
+      <div className="mb-3 inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-talent-orange-400/20 text-talent-orange-500">
         <Icon name={rec.icon} className="h-5 w-5" />
       </div>
       <h3 className="mb-1.5 text-lg font-bold text-talent-slate-900">{rec.title}</h3>

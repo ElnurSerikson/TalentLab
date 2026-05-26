@@ -23,9 +23,9 @@ export function CharacterPage() {
 
   const name = user?.name || 'Друг';
 
-  const finish = () => {
+  const finish = (to: string) => {
     completeOnboarding();
-    navigate('/dashboard');
+    navigate(to);
   };
 
   return (
@@ -104,7 +104,7 @@ export function CharacterPage() {
             <div className="mb-2 text-4xl font-extrabold tabular">{character.aiReadiness}%</div>
             <div className="h-2.5 w-full overflow-hidden rounded-full bg-white/25">
               <motion.div
-                className="h-full rounded-full bg-talent-amber-400"
+                className="h-full rounded-full bg-talent-orange-400"
                 initial={{ width: 0 }}
                 animate={{ width: `${character.aiReadiness}%` }}
                 transition={{ duration: 0.8, ease: 'easeOut' }}
@@ -153,8 +153,11 @@ export function CharacterPage() {
         </Card>
       </Reveal>
 
-      <div className="mt-8 flex justify-center">
-        <Button size="lg" onClick={finish} rightIcon={<ArrowRight className="h-5 w-5" />}>
+      <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
+        <Button size="lg" onClick={() => finish('/tests')} rightIcon={<ArrowRight className="h-5 w-5" />}>
+          Выбрать тест
+        </Button>
+        <Button size="lg" variant="outline" onClick={() => finish('/dashboard')}>
           В личный кабинет
         </Button>
       </div>

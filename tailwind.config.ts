@@ -16,10 +16,11 @@ const config: Config = {
             600: '#6D28D9',
             700: '#5B21B6',
           },
-          amber: {
-            300: '#FCD34D',
-            400: '#FBBF24',
-            500: '#F59E0B',
+          // secondary — яркий оранж (контраст к фиолетовому)
+          orange: {
+            300: '#FFB74D',
+            400: '#FF9800',
+            500: '#F57C00',
           },
           emerald: {
             400: '#34D399',
@@ -29,9 +30,15 @@ const config: Config = {
             400: '#FB7185',
             500: '#F43F5E',
           },
+          // акцент-«внимание», использовать редко и точечно
+          wine: {
+            500: '#9F1239',
+            600: '#831843',
+          },
+          // фон — тёплый песочно-персиковый пастель
           cream: {
-            50: '#FAF9F6',
-            100: '#F4F2EC',
+            50: '#FCF4EC',
+            100: '#F6E8D8',
           },
           slate: {
             200: '#E2E8F0',
@@ -41,8 +48,8 @@ const config: Config = {
         },
       },
       fontFamily: {
-        heading: ['Onest', 'system-ui', 'sans-serif'],
-        sans: ['Inter', 'system-ui', 'sans-serif'],
+        heading: ['"Fira Sans"', 'system-ui', 'sans-serif'],
+        sans: ['"Fira Sans"', 'system-ui', 'sans-serif'],
       },
       borderRadius: {
         xl: '12px',

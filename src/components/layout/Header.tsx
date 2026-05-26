@@ -49,7 +49,7 @@ export function Header() {
                 <Button variant="ghost" size="sm">Войти</Button>
               </Link>
               <Link to="/auth/register">
-                <Button size="sm">Начать бесплатно</Button>
+                <Button variant="secondary" size="sm">Начать бесплатно</Button>
               </Link>
             </>
           )}
@@ -83,7 +83,7 @@ export function Header() {
                   <Button variant="outline" fullWidth>Войти</Button>
                 </Link>
                 <Link to="/auth/register" onClick={() => setOpen(false)}>
-                  <Button fullWidth>Начать бесплатно</Button>
+                  <Button variant="secondary" fullWidth>Начать бесплатно</Button>
                 </Link>
               </>
             )}

@@ -9,8 +9,8 @@ export interface PageWrapperProps {
 }
 
 const widthClasses = {
-  narrow: 'max-w-2xl',
-  wide: 'max-w-5xl',
+  narrow: 'max-w-2xl', // формы и центрированные карточки-результаты
+  wide: 'max-w-6xl', // золотой стандарт — как хедер/футер
   full: 'max-w-6xl',
 };
 

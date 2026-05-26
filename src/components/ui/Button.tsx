@@ -19,7 +19,7 @@ const variantClasses: Record<Variant, string> = {
   primary:
     'bg-talent-violet-500 text-white hover:bg-talent-violet-600 active:bg-talent-violet-700 shadow-soft',
   secondary:
-    'bg-talent-amber-400 text-talent-slate-900 hover:bg-talent-amber-500 active:bg-talent-amber-500',
+    'bg-talent-orange-400 text-white hover:bg-talent-orange-500 active:bg-talent-orange-500 shadow-soft',
   ghost:
     'bg-transparent text-talent-slate-900 hover:bg-talent-violet-50 active:bg-talent-violet-100',
   outline:

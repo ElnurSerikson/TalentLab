@@ -54,3 +54,26 @@ export async function recordFeedback(payload: FeedbackPayload): Promise<void> {
     if (import.meta.env.DEV) console.warn('[convex] recordFeedback failed', err);
   }
 }
+
+export interface FounderResultPayload {
+  answers: { questionId: string; value: number | string }[];
+  primary: string;
+  secondary: string;
+  readiness: number;
+  verdictTier: string;
+  roles: { role: string; percent: number }[];
+  startupTypes: string[];
+}
+
+/** Анонимно записать результат теста «Стартап» в Convex. Best-effort. */
+export async function recordFounderResult(payload: FounderResultPayload): Promise<void> {
+  if (!client) return;
+  try {
+    await client.mutation(api.founderRuns.submit, {
+      clientId: getClientId(),
+      ...payload,
+    });
+  } catch (err) {
+    if (import.meta.env.DEV) console.warn('[convex] recordFounderResult failed', err);
+  }
+}
