@@ -1,11 +1,11 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { useAuthActions } from '@convex-dev/auth/react';
 import { ArrowRight, LogOut, Sparkles } from 'lucide-react';
 import { PageWrapper } from '@/components/layout/PageWrapper';
 import { Avatar, Button, Card, Icon } from '@/components/ui';
 import { useUserStore } from '@/store/userStore';
 import { useReportStore } from '@/store/reportStore';
 import { useBaseStore } from '@/store/baseStore';
+import { useAuthActionsSafe } from '@/lib/authActions';
 import { resetSession } from '@/lib/session';
 
 const EXPECTATION_LABELS: Record<string, string> = {
@@ -21,11 +21,11 @@ export function DashboardPage() {
   const user = useUserStore((s) => s.user);
   const report = useReportStore((s) => s.report);
   const character = useBaseStore((s) => s.character);
-  const { signOut } = useAuthActions();
+  const { signOut } = useAuthActionsSafe();
 
   const handleLogout = async () => {
     try {
-      await signOut();
+      await signOut?.();
     } catch {
       /* ignore */
     }

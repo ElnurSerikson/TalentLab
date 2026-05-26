@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAuthActions } from '@convex-dev/auth/react';
 import { z } from 'zod';
 import { Mail, Lock } from 'lucide-react';
 import { PageWrapper } from '@/components/layout/PageWrapper';
 import { Button, Card, Input, Tabs } from '@/components/ui';
 import { Logo } from '@/components/layout/Logo';
 import { useUserStore } from '@/store/userStore';
+import { useAuthActionsSafe } from '@/lib/authActions';
 import { track } from '@/lib/analytics';
 
 const emailSchema = z.string().email('Введите корректный email');
@@ -23,7 +23,7 @@ export function AuthPage({ mode: initialMode }: { mode: 'login' | 'register' }) 
   const [mode, setMode] = useState<'login' | 'register'>(initialMode);
   const navigate = useNavigate();
   const login = useUserStore((s) => s.login);
-  const { signIn } = useAuthActions();
+  const { signIn } = useAuthActionsSafe();
   const [authError, setAuthError] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
@@ -38,6 +38,10 @@ export function AuthPage({ mode: initialMode }: { mode: 'login' | 'register' }) 
 
   const onSubmit = async (data: FormValues) => {
     setAuthError('');
+    if (!signIn) {
+      setAuthError('Авторизация временно недоступна — попробуй позже.');
+      return;
+    }
     setSubmitting(true);
     try {
       await signIn('password', {
