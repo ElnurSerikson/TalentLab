@@ -9,6 +9,25 @@ export function convexEnabled(): boolean {
   return client !== null;
 }
 
+export interface ProfilePayload {
+  name?: string;
+  age?: number;
+  gender?: string;
+}
+
+/**
+ * Сохранить данные профиля (имя/возраст/пол) у текущего авторизованного
+ * пользователя в Convex. Best-effort — не блокирует UI.
+ */
+export async function saveUserProfile(payload: ProfilePayload): Promise<void> {
+  if (!client) return;
+  try {
+    await client.mutation(api.users.updateProfile, payload);
+  } catch (err) {
+    if (import.meta.env.DEV) console.warn('[convex] saveUserProfile failed', err);
+  }
+}
+
 export interface BaseResultPayload {
   name?: string;
   age?: number;

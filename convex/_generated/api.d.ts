@@ -13,6 +13,7 @@ import type * as baseRuns from "../baseRuns.js";
 import type * as feedback from "../feedback.js";
 import type * as founderRuns from "../founderRuns.js";
 import type * as http from "../http.js";
+import type * as users from "../users.js";
 
 import type {
   ApiFromModules,
@@ -26,6 +27,7 @@ declare const fullApi: ApiFromModules<{
   feedback: typeof feedback;
   founderRuns: typeof founderRuns;
   http: typeof http;
+  users: typeof users;
 }>;
 
 /**

@@ -7,6 +7,17 @@ import { authTables } from '@convex-dev/auth/server';
 export default defineSchema({
   ...authTables,
 
+  // Таблица users из Convex Auth, урезанная под наши нужды: используем только
+  // Password (email+пароль), поэтому лишние дефолтные поля (image, phone,
+  // phoneVerificationTime, isAnonymous, emailVerificationTime) и phone-индекс
+  // убраны. Прикладные поля профиля из онбординга — age и gender.
+  users: defineTable({
+    name: v.optional(v.string()),
+    email: v.optional(v.string()),
+    age: v.optional(v.number()),
+    gender: v.optional(v.string()),
+  }).index('email', ['email']),
+
   baseRuns: defineTable({
     clientId: v.string(), // анонимный id устройства (localStorage)
     name: v.optional(v.string()),

@@ -1,12 +1,10 @@
-import { Link, useNavigate } from 'react-router-dom';
-import { ArrowRight, LogOut, Sparkles } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { ArrowRight, Sparkles } from 'lucide-react';
 import { PageWrapper } from '@/components/layout/PageWrapper';
-import { Avatar, Button, Card, Icon } from '@/components/ui';
+import { Button, Card, Icon } from '@/components/ui';
 import { useUserStore } from '@/store/userStore';
 import { useReportStore } from '@/store/reportStore';
 import { useBaseStore } from '@/store/baseStore';
-import { useAuthActionsSafe } from '@/lib/authActions';
-import { resetSession } from '@/lib/session';
 
 const EXPECTATION_LABELS: Record<string, string> = {
   understand_strengths: 'Понять сильные стороны',
@@ -17,34 +15,19 @@ const EXPECTATION_LABELS: Record<string, string> = {
 };
 
 export function DashboardPage() {
-  const navigate = useNavigate();
   const user = useUserStore((s) => s.user);
   const report = useReportStore((s) => s.report);
   const character = useBaseStore((s) => s.character);
-  const { signOut } = useAuthActionsSafe();
-
-  const handleLogout = async () => {
-    try {
-      await signOut?.();
-    } catch {
-      /* ignore */
-    }
-    resetSession();
-    navigate('/');
-  };
 
   if (!user) return null;
 
   return (
     <PageWrapper width="wide">
-      <div className="mb-8 flex items-center gap-4">
-        <Avatar name={user.name || user.email} size={56} />
-        <div>
-          <h1 className="text-2xl font-extrabold text-talent-slate-900">
-            Привет, {user.name || 'друг'}!
-          </h1>
-          <p className="text-talent-slate-500">Твой личный кабинет TalentLab</p>
-        </div>
+      <div className="mb-8">
+        <h1 className="text-2xl font-extrabold text-talent-slate-900">
+          Привет, {user.name || 'друг'}!
+        </h1>
+        <p className="text-talent-slate-500">Твой личный кабинет TalentLab</p>
       </div>
 
       <div className="grid gap-5 lg:grid-cols-3">
@@ -142,30 +125,6 @@ export function DashboardPage() {
           </div>
         </Card>
       )}
-
-      {/* Settings */}
-      <Card className="mt-5">
-        <h2 className="mb-4 text-lg font-bold text-talent-slate-900">Настройки</h2>
-        <div className="space-y-3 text-sm">
-          <SettingRow label="Уведомления" hint="Скоро будет доступно">
-            <span className="inline-flex h-6 w-11 items-center rounded-full bg-talent-slate-200 px-0.5">
-              <span className="h-5 w-5 rounded-full bg-white shadow" />
-            </span>
-          </SettingRow>
-          <SettingRow label="Язык" hint="Русский">
-            <span className="text-talent-slate-500">RU</span>
-          </SettingRow>
-          <div className="pt-2">
-            <Button
-              variant="ghost"
-              onClick={handleLogout}
-              leftIcon={<LogOut className="h-4 w-4" />}
-            >
-              Выйти из аккаунта
-            </Button>
-          </div>
-        </div>
-      </Card>
     </PageWrapper>
   );
 }
@@ -175,26 +134,6 @@ function Row({ label, value }: { label: string; value: string }) {
     <div className="flex justify-between gap-4">
       <dt className="text-talent-slate-500">{label}</dt>
       <dd className="truncate font-medium text-talent-slate-900">{value}</dd>
-    </div>
-  );
-}
-
-function SettingRow({
-  label,
-  hint,
-  children,
-}: {
-  label: string;
-  hint?: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="flex items-center justify-between gap-4">
-      <div>
-        <div className="font-medium text-talent-slate-900">{label}</div>
-        {hint && <div className="text-xs text-talent-slate-500">{hint}</div>}
-      </div>
-      {children}
     </div>
   );
 }

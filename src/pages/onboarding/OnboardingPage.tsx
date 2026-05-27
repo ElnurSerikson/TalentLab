@@ -1,28 +1,42 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowLeft, ArrowRight, Brain, Compass, Sparkles, Target } from 'lucide-react';
 import { PageWrapper } from '@/components/layout/PageWrapper';
 import { Button, Card, Input, ProgressBar } from '@/components/ui';
+import { BirthYearPicker } from '@/components/ui/BirthYearPicker';
 import { useUserStore } from '@/store/userStore';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
+import { saveUserProfile } from '@/lib/convexClient';
 import { track } from '@/lib/analytics';
 import type { Gender } from '@/domain/types';
 import { cn } from '@/lib/cn';
 
 const TOTAL = 3;
+const CURRENT_YEAR = new Date().getFullYear();
 
 export function OnboardingPage() {
   const navigate = useNavigate();
   const user = useUserStore((s) => s.user);
   const setProfile = useUserStore((s) => s.setProfile);
+  const completeOnboarding = useUserStore((s) => s.completeOnboarding);
 
   const [step, setStep] = useLocalStorage('talentlab:onboarding-step', 0);
 
   const [name, setName] = useState(user?.name ?? '');
-  const [age, setAge] = useState<string>(user?.age ? String(user.age) : '');
+  const [birthYear, setBirthYear] = useState<number | null>(
+    user?.age ? CURRENT_YEAR - user.age : null,
+  );
   const [gender, setGender] = useState<Gender | ''>(user?.gender ?? '');
   const [profileError, setProfileError] = useState('');
+
+  // Если онбординг уже был завершён в прошлой сессии — возвращаем в кабинет,
+  // не заставляя проходить его заново. (Захват значения на момент монтирования,
+  // чтобы не перехватывать завершение прямо в этой сессии на 3-м экране.)
+  const completedOnMount = useRef(user?.onboardingComplete ?? false);
+  useEffect(() => {
+    if (completedOnMount.current) navigate('/dashboard', { replace: true });
+  }, [navigate]);
 
   const next = () => setStep(Math.min(step + 1, TOTAL - 1));
   const back = () => setStep(Math.max(step - 1, 0));
@@ -32,9 +46,8 @@ export function OnboardingPage() {
       setProfileError('Как тебя зовут?');
       return;
     }
-    const ageNum = Number(age);
-    if (!age || Number.isNaN(ageNum) || ageNum < 10 || ageNum > 80) {
-      setProfileError('Укажи возраст (10–80)');
+    if (!birthYear) {
+      setProfileError('Выбери год рождения');
       return;
     }
     if (!gender) {
@@ -42,11 +55,13 @@ export function OnboardingPage() {
       return;
     }
     setProfileError('');
-    setProfile({
-      name: name.trim(),
-      age: ageNum,
-      gender: gender || null,
-    });
+    const age = CURRENT_YEAR - birthYear;
+    setProfile({ name: name.trim(), age, gender: gender || null });
+    // Привязываем данные к авторизованному пользователю в Convex (best-effort).
+    void saveUserProfile({ name: name.trim(), age, gender: gender || undefined });
+    // Онбординг (анкета) по факту завершён — фиксируем, чтобы при возврате
+    // пользователь попадал сразу в кабинет.
+    completeOnboarding();
     next();
   };
 
@@ -55,6 +70,9 @@ export function OnboardingPage() {
     setStep(0);
     navigate('/onboarding/base');
   };
+
+  // Возвращающегося «завершённого» пользователя не показываем онбординг — редирект в эффекте.
+  if (completedOnMount.current) return null;
 
   return (
     <PageWrapper width="narrow">
@@ -82,12 +100,10 @@ export function OnboardingPage() {
               <p className="mb-6 text-talent-slate-500">Это поможет подобрать тон и формулировки</p>
               <div className="space-y-4">
                 <Input label="Имя" value={name} onChange={(e) => setName(e.target.value)} placeholder="Как тебя зовут?" />
-                <Input
-                  label="Возраст"
-                  type="number"
-                  value={age}
-                  onChange={(e) => setAge(e.target.value)}
-                  placeholder="Сколько тебе лет?"
+                <BirthYearPicker
+                  label="Год рождения"
+                  value={birthYear}
+                  onChange={setBirthYear}
                 />
                 <div>
                   <span className="mb-1.5 block text-sm font-medium text-talent-slate-900">Пол</span>
@@ -116,8 +132,9 @@ export function OnboardingPage() {
                 Сначала — короткий тест характера
               </h2>
               <p className="mx-auto max-w-sm text-talent-slate-500">
-                28 коротких вопросов, чтобы понять твои сильные стороны и из чего ты сделан.
-                Займёт минут 5 — отвечай честно, правильных и неправильных ответов нет.
+                28 коротких вопросов, чтобы понять твои сильные стороны и из чего
+                складывается твой характер. Займёт минут 5 — отвечай честно, правильных
+                и неправильных ответов нет.
               </p>
             </Card>
           )}
@@ -140,6 +157,17 @@ export function OnboardingPage() {
           </Button>
         )}
       </div>
+
+      {step === 2 && (
+        <div className="mt-3 text-center">
+          <button
+            onClick={() => navigate('/dashboard')}
+            className="text-sm font-medium text-talent-slate-500 transition-colors hover:text-talent-violet-600"
+          >
+            Перейти в кабинет
+          </button>
+        </div>
+      )}
     </PageWrapper>
   );
 }
